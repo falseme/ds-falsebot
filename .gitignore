@@ -165,6 +165,7 @@ cython_debug/
 
 # Bot token
 .token
+config.py
 
 #Gfie
 *.gfie

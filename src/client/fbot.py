@@ -6,20 +6,6 @@ from PIL import ImageFont
 
 class FalseBot(commands.Bot):
 
-    # Run Bot
-    def runbot(self):
-        filename = ".token"
-
-        try:
-            with open(filename, 'r') as file:
-                token = file.readline()
-                self.run(token)
-        except Exception:
-            print("ERROR: COULD NOT READ BOT TOKEN FILE (.token). Assure .token file is in the root directory of the project")
-        finally:
-            file.close()
-
-
     # Bot Events
     # Bot initialized
     async def on_ready(self):
@@ -51,7 +37,7 @@ class FalseBot(commands.Bot):
         text3y = 405 # user count ***
 
         channel = member.guild.system_channel
-        welcome_msg = f"BIENVENID@!" # Title *
+        welcome_msg = f"¡BIENVENID@!" # Title *
         welcome_mention = f"{member.global_name} ({member.name})" # user mention **
         num = sum(m.joined_at < member.joined_at for m in member.guild.members if m.joined_at is not None)
         welcome_count = f"ERES EL MIEMBRO #{num}" # user count ***
@@ -75,5 +61,6 @@ class FalseBot(commands.Bot):
         msgfile = File(fp=background.image_bytes, filename="bg.jpg")
         await channel.send(f"Bienvenid@ a {member.guild.name}! Esperamos que disfrutes mucho tu estancia.")
         await channel.send(file=msgfile)
+
 
 

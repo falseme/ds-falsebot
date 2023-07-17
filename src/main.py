@@ -1,11 +1,11 @@
-from falsebot.falsebot import FalseBot
-from falsebot.falseintents import FalseIntents
+from client import fintents, fbot
+import config
 
 false_command = '&'
 false_desc = "Falseme Mod Bot"
-false_intents = FalseIntents.intents()
+false_intents = fintents.intents()
 
-falsebot = FalseBot(command_prefix=false_command, description=false_desc, intents=false_intents)
+falsebot = fbot.FalseBot(command_prefix=false_command, description=false_desc, intents=false_intents)
 
-falsebot.runbot()
+falsebot.run(config.TOKEN)
 
