@@ -10,6 +10,14 @@ class FalseBot(commands.Bot):
     # Bot initialized
     async def on_ready(self):
         print(f'Logged as {self.user}')
+        
+        # Sync commands
+        try:
+            synced = await self.tree.sync()
+            for s in synced:
+                print(s.name)
+        except Exception as ex:
+            print(ex)
 
     # New Member
     # Generates a welcome embed message
@@ -20,9 +28,6 @@ class FalseBot(commands.Bot):
     async def on_message(self, message):
         if(message.author == self):
             return
-
-        if(message.content.startswith("&&test-welcome")):
-            await self.welcome_member(message.author)
 
     # Methods
     # welcome_member: welcomes a new member using an image
