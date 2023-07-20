@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 "discord.py" = "*"
+easy-pil = "*"
+pillow = "*"
 
 [dev-packages]
 
