@@ -1,0 +1,6 @@
+discord.py
+easy_pil
+pillow
+openai
+python-dotenv
+requests

@@ -7,6 +7,9 @@ name = "pypi"
 "discord.py" = "*"
 easy-pil = "*"
 pillow = "*"
+openai = "*"
+python-dotenv = "*"
+requests = "*"
 
 [dev-packages]
 
