@@ -2,6 +2,7 @@ from app.client.bot import FalseBot
 import discord
 from discord import app_commands
 from discord.ext import commands
+from app.ai import gpt
 
 from datetime import timedelta
 import random
@@ -127,16 +128,18 @@ def loadcommands(bot: FalseBot):
     async def fhelp(interaction: discord.Interaction):
         msg = discord.Embed(colour = discord.Colour.blue(), title = "**Lista de Comandos**", type = "rich")
         if(interaction.user.get_role(859958148625203201) != None):
-            msg.add_field(inline = False, name = "Moderacion",
-                          value = "- **/fwarn [usuario] [motivo]** - Da una advertencia por md a un usuario\n" + 
-                          "- **/ftimeout [usuario] [minutos] [motivo]** - Silencia un usuario por un tiempo determinado\n" + 
-                          "- **/fkick [usuario] [motivo]** - Expulsa a un usuario\n" + 
-                          "- **/fban [usuario] [dias] [motivo]** - Banea a un usuario por un tiempo determinad\n")
-        msg.add_field(inline = False, name = "Interaccion entre usuarios",
-                      value = "- **/fhug [usuario] [monkey]** - Envia un abrazo a otro usuario. 'monkey' es opcional\n" + 
-                      "- **/fpat [usuario]** - Envia un \"pat\" a otro usuario\n")
+            msg.add_field(inline = False, name = "**Moderacion**",
+                          value = "- `/fwarn [usuario] [motivo]` - Da una advertencia por md a un usuario\n" + 
+                          "- `/ftimeout [usuario] [minutos] [motivo]` - Silencia un usuario por un tiempo determinado\n" + 
+                          "- `/fkick [usuario] [motivo]` - Expulsa a un usuario\n" + 
+                          "- `/fban [usuario] [dias] [motivo]` - Banea a un usuario por un tiempo determinad\n")
+        msg.add_field(inline = False, name = "**Interaccion entre usuarios**",
+                      value = "- `/fhug [usuario] [monkey]` - Envia un abrazo a otro usuario. 'monkey' es opcional\n" + 
+                      "- `/fpat [usuario]` - Envia un \"pat\" a otro usuario\n")
+        msg.add_field(inline = False, name = "**Interaccion con el bot (AI)**",
+                      value = "- `/falsebot [prompt/message]` - El bot responde a lo que sea que le envies\n")
         #msg.add_field(inline = False, name = "NSFW",
-        #              value = "- **/fnsfw-rand** - Genera un codigo aleatorio\n")
+        #              value = "- `/fnsfw-rand` - Genera un codigo aleatorio\n")
 
         await interaction.response.send_message(embed = msg, ephemeral = True)
     ## ERROR ##
@@ -179,3 +182,16 @@ def loadcommands(bot: FalseBot):
     async def fpat_error(interaction: discord.Interaction, error):
         await command_error_message(interaction = interaction, error = error)
 
+
+    ### OPENAI ###
+
+    ## RESPONSE ##
+    @bot.tree.command(name="falsebot")
+    @app_commands.describe(message = "Mensaje o \"Prompt\" a enviar al bot para que este responda")
+    async def falsebot(interaction: discord.Interaction, message: str):
+        response = gpt.response(prompt = message)
+        await interaction.response.send_message(response)
+    ## ERROR ##
+    @falsebot.error
+    async def falsebot_error(interaction: discord.Interaction, error):
+        await command_error_message(interaction = interaction, error = error)
