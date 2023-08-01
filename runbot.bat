@@ -1,3 +1,3 @@
 @echo off
-pipenv run python src/main.py
+pipenv run python main.py
 pause

@@ -1,4 +1,4 @@
-from client.fbot import FalseBot
+from app.client.bot import FalseBot
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -153,6 +153,7 @@ def loadcommands(bot: FalseBot):
 
         if(monkey):
             url = huglistmonkey[random.randint(0, len(huglistmonkey)-1)]
+            embed.set_footer(text="Reject humanity, become monkey!")
         else:
             url = huglist[random.randint(0, len(huglist)-1)]
 
