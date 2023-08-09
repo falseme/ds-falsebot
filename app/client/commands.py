@@ -13,15 +13,6 @@ huglistmonkey = ["https://media.giphy.com/media/42YlR8u9gV5Cw/giphy.gif",
            "https://media.giphy.com/media/H6NkrhBaDEXQt8pwbD/giphy.gif",
            "https://media.giphy.com/media/tyttpHcMlSFsNSPpEmA/giphy-downsized-large.gif"]
 
-huglist = ["https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTB2c3M0Mm8wMXNqZ24xaDBkenRicThsd210eTI3YzQxdjFmbnB2cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u9BxQbM5bxvwY/giphy.gif",
-           "https://media.giphy.com/media/LWTxLvp8G6gzm/giphy.gif",
-           "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXdmdDFqdGh2aXA1NG42bXgweWFjdTVuZ3djY24yazRyMWY0c21teiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5eyhBKLvYhafu/giphy.gif"]
-
-patlist = ["https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm4yeWE1dDZtZno1YjQ0cDZqOWhjYXZnZ21qZXg2c2VzcTg1eGczeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M3a51DMeWvYUo/giphy.gif",
-           "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmI1MnQ3YTVnc2tnMjdlcDh0ZzZxdHI1Z3U2ZHc5MmM5ZXpkb25wciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4HP0ddZnNVvKU/giphy.gif",
-           "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjQ0Zjlncno0dTEwY21ncm55anUxdmJwdnpqZXMxcTRlZG5sbmt1ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5tmRHwTlHAA9WkVxTU/giphy.gif",
-           "https://media.giphy.com/media/SSPW60F2Uul8OyRvQ0/giphy.gif"]
-
 ### CONDITIONALS ###
 
 ## SERVER OWNER ##
@@ -149,16 +140,13 @@ def loadcommands(bot: FalseBot):
 
     ## HUG ##
     @bot.tree.command(name="fhug")
-    @app_commands.describe(member = "Usuario a quien quieres enviar el abrazo", monkey = "Verdadero SOLO si desea que el gif sea de un mono")
-    async def fhug(interaction: discord.Interaction, member: discord.Member, monkey: bool = False):
+    @app_commands.describe(member = "Usuario a quien quieres enviar el abrazo")
+    async def fhug(interaction: discord.Interaction, member: discord.Member):
         author = interaction.user
         embed = discord.Embed(colour = discord.Colour.blue(), description = f"{member.mention}! {author.mention} te ha enviado un abrazo!", type = "rich")
 
-        if(monkey):
-            url = huglistmonkey[random.randint(0, len(huglistmonkey)-1)]
-            embed.set_footer(text="Reject humanity, become monkey!")
-        else:
-            url = huglist[random.randint(0, len(huglist)-1)]
+        url = huglistmonkey[random.randint(0, len(huglistmonkey)-1)]
+        embed.set_footer(text="Reject humanity, become monkey!")
 
         embed.set_image(url = url)
         await interaction.response.send_message(embed = embed)
@@ -167,20 +155,20 @@ def loadcommands(bot: FalseBot):
     async def fhug_error(interaction: discord.Interaction, error):
         await command_error_message(interaction = interaction, error = error)
 
-    ## PAT ##
-    @bot.tree.command(name="fpat")
-    @app_commands.describe(member = "Ususario a quien quieres enviar el 'pat'")
-    async def fpat(interaction: discord.Interaction, member: discord.Member):
-        author = interaction.user
-        embed = discord.Embed(colour = discord.Colour.blue(), description = f"{member.mention}! {author.mention} te ha enviado un pat!", type = "rich")
-
-        url = patlist[random.randint(0, len(patlist)-1)]
-        embed.set_image(url = url)
-        await interaction.response.send_message(embed = embed)
-    ## ERROR ##
-    @fpat.error
-    async def fpat_error(interaction: discord.Interaction, error):
-        await command_error_message(interaction = interaction, error = error)
+#    ## PAT ##
+#    @bot.tree.command(name="fpat")
+#    @app_commands.describe(member = "Ususario a quien quieres enviar el 'pat'")
+#    async def fpat(interaction: discord.Interaction, member: discord.Member):
+#        author = interaction.user
+#        embed = discord.Embed(colour = discord.Colour.blue(), description = f"{member.mention}! {author.mention} te ha enviado un pat!", type = "rich")
+#
+#        url = patlist[random.randint(0, len(patlist)-1)]
+#        embed.set_image(url = url)
+#        await interaction.response.send_message(embed = embed)
+#    ## ERROR ##
+#    @fpat.error
+#    async def fpat_error(interaction: discord.Interaction, error):
+#        await command_error_message(interaction = interaction, error = error)
 
 
     ### OPENAI ###
