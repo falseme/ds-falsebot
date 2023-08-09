@@ -4,6 +4,8 @@ from discord.ext import commands
 from easy_pil import Editor, load_image_async
 from PIL import ImageFont
 
+from app.ai import gpt
+
 class FalseBot(commands.Bot):
 
     # Bot Events
@@ -28,6 +30,28 @@ class FalseBot(commands.Bot):
     async def on_message(self, message):
         if(message.author == self):
             return
+
+        content = message.content
+        name = "<@&1130032720953753622>"
+
+        if(content.find(name) != -1):
+            content = content.replace(name, "")
+            response = gpt.response(prompt = content)
+            await message.channel.send(response)
+        
+    # Member banned
+    # show an embed message
+    async def on_member_ban(guild, user):
+        msg = discord.Embed(colour = discord.Colour.red(), title = "**Usuario Baneado**", type = "rich")
+        msg.add_field(name = f"El usuario {user.global_name} ha sido baneado", value = f"(@{user.display_name})")
+        msg.set_thumbnail(url= "attachment://ban.png")
+
+        channel = guild.get_channel(1138766110955667507)
+
+        await channel.send(file = discord.File("res/icons/ban.png", filename= "ban.png"), embed = msg)
+        await user.send(file = discord.File("res/icons/ban.png", filename= "ban.png"), embed = msg)
+
+
 
     # Methods
     # welcome_member: welcomes a new member using an image

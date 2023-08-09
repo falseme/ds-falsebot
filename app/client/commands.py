@@ -29,74 +29,10 @@ async def command_error_message(interaction, error):
 
 def loadcommands(bot: FalseBot):
 
-    ### TEST COMMANDS ###
-
-    ## TEST WELCOME ##
-    @bot.tree.command(name="testwelcome")
-    @is_owner()
-    async def testwelcome(interaction: discord.Interaction):
-        await interaction.response.send_message("Testing welcome command", ephemeral=True)
-        await bot.welcome_member(interaction.user)
-    ## ERROR ##
-    @testwelcome.error
-    async def testwelcome_error(interaction: discord.Interaction, error):
-        await command_error_message(interaction = interaction, error = error)
-
     ### MODERATION COMMANDS ###
 
-    ## TIMEOUT ##
-    @bot.tree.command(name="ftimeout")
-    @app_commands.describe(member = "Usuario", time = "Tiempo en minutos", reason = "Motivo")
-    @is_owner()
-    async def ftimeout(interaction: discord.Interaction, member: discord.Member, time: int, reason: str):
-        msg = discord.Embed(colour = discord.Colour.red(), title = "**Usuario Silenciado**", type = "rich")
-        msg.add_field(name = f"El usuario {member.global_name}(@{member.display_name}) ha sido silenciado", value = f"Motivo: {reason} \nTiempo: {time} minuto(s)")
-        msg.set_thumbnail(url= "attachment://timeout.png")
-
-        await member.timeout(timedelta(minutes = time), reason = reason)
-        await interaction.response.send_message(file = discord.File("res/icons/timeout.png", filename= "timeout.png"), embed = msg)
-    ## ERROR ##
-    @ftimeout.error
-    async def ftimeout_error(interaction: discord.Interaction, error):
-        await command_error_message(interaction = interaction, error = error)
-
-    ## KICK ##
-    @bot.tree.command(name="fkick")
-    @app_commands.describe(member = "Usuario", reason = "Motivo")
-    @is_owner()
-    async def fkick(interaction: discord.Interaction, member: discord.Member, reason: str):
-        msg = discord.Embed(colour = discord.Colour.red(), title = "**Usuario Expulsado**", type = "rich")
-        msg.add_field(name = f"El usuario {member.global_name}(@{member.display_name}) ha sido expulsado", value = f"Motivo: {reason}")
-        msg.set_thumbnail(url= "attachment://kick.png")
-        
-        await member.send(file = discord.File("res/icons/kick.png", filename= "kick.png"), embed = msg)
-        await member.kick(reason = reason)
-        await interaction.response.send_message(file = discord.File("res/icons/kick.png", filename= "kick.png"), embed = msg)
-    ## ERROR ##
-    @fkick.error
-    async def fkick_error(interaction: discord.Interaction, error):
-        await command_error_message(interaction = interaction, error = error)
-
-    ## BAN ##
-    @bot.tree.command(name="fban")
-    @app_commands.describe(member= "Usuario", reason= "Motivo", time = "Tiempo en dias")
-    @is_owner()
-    @commands.has_permissions(ban_members=True)
-    async def fban(interaction: discord.Interaction, member: discord.Member, time: int, reason: str):
-        msg = discord.Embed(colour = discord.Colour.red(), title = "**Usuario Baneado**", type = "rich")
-        msg.add_field(name = f"El usuario {member.global_name}(@{member.display_name}) ha sido baneado", value = f"Motivo: {reason} \nTiempo: {time} dia(s)")
-        msg.set_thumbnail(url= "attachment://ban.png")
-
-        await member.send(file = discord.File("res/icons/ban.png", filename= "ban.png"), embed = msg)
-        await member.ban(reason = reason)
-        await interaction.response.send_message(file = discord.File("res/icons/ban.png", filename= "ban.png"), embed = msg)
-    ## ERROR ##
-    @fban.error
-    async def fban_error(interaction: discord.Interaction, error):
-        await command_error_message(interaction = interaction, error = error)
-
     ## WARN ##
-    @bot.tree.command(name="fwarn")
+    @bot.tree.command(name="warn")
     @app_commands.describe(member = "Usuario", reason = "Motivo")
     @is_owner()
     async def fwarn(interaction: discord.Interaction, member: discord.Member, reason: str):
@@ -105,6 +41,7 @@ def loadcommands(bot: FalseBot):
         msg.set_thumbnail(url = "attachment://warn.png")
         
         await member.send(file = discord.File("res/icons/warn.png", filename= "warn.png"), embed = msg)
+        await member.guild.get_channel(1138766110955667507).send(file = discord.File("res/icons/warn.png", filename= "warn.png"), embed = msg)
         await interaction.response.send_message(file = discord.File("res/icons/warn.png", filename= "warn.png"), embed = msg, ephemeral = True)
     ## ERROR ##
     @fwarn.error
@@ -118,17 +55,10 @@ def loadcommands(bot: FalseBot):
     @bot.tree.command(name="fhelp")
     async def fhelp(interaction: discord.Interaction):
         msg = discord.Embed(colour = discord.Colour.blue(), title = "**Lista de Comandos**", type = "rich")
-        if(interaction.user.get_role(859958148625203201) != None):
-            msg.add_field(inline = False, name = "**Moderacion**",
-                          value = "- `/fwarn [usuario] [motivo]` - Da una advertencia por md a un usuario\n" + 
-                          "- `/ftimeout [usuario] [minutos] [motivo]` - Silencia un usuario por un tiempo determinado\n" + 
-                          "- `/fkick [usuario] [motivo]` - Expulsa a un usuario\n" + 
-                          "- `/fban [usuario] [dias] [motivo]` - Banea a un usuario por un tiempo determinad\n")
         msg.add_field(inline = False, name = "**Interaccion entre usuarios**",
-                      value = "- `/fhug [usuario] [monkey]` - Envia un abrazo a otro usuario. 'monkey' es opcional\n" + 
-                      "- `/fpat [usuario]` - Envia un \"pat\" a otro usuario\n")
+                      value = "- `/fhug [usuario]` - Envia un abrazo a otro usuario. 'monkey gif'\n")
         msg.add_field(inline = False, name = "**Interaccion con el bot (AI)**",
-                      value = "- `/falsebot [prompt/message]` - El bot responde a lo que sea que le envies\n")
+                      value = "- `Mention` - Menciona al bot en un mensaje para conversar")
         #msg.add_field(inline = False, name = "NSFW",
         #              value = "- `/fnsfw-rand` - Genera un codigo aleatorio\n")
 
@@ -155,31 +85,3 @@ def loadcommands(bot: FalseBot):
     async def fhug_error(interaction: discord.Interaction, error):
         await command_error_message(interaction = interaction, error = error)
 
-#    ## PAT ##
-#    @bot.tree.command(name="fpat")
-#    @app_commands.describe(member = "Ususario a quien quieres enviar el 'pat'")
-#    async def fpat(interaction: discord.Interaction, member: discord.Member):
-#        author = interaction.user
-#        embed = discord.Embed(colour = discord.Colour.blue(), description = f"{member.mention}! {author.mention} te ha enviado un pat!", type = "rich")
-#
-#        url = patlist[random.randint(0, len(patlist)-1)]
-#        embed.set_image(url = url)
-#        await interaction.response.send_message(embed = embed)
-#    ## ERROR ##
-#    @fpat.error
-#    async def fpat_error(interaction: discord.Interaction, error):
-#        await command_error_message(interaction = interaction, error = error)
-
-
-    ### OPENAI ###
-
-    ## RESPONSE ##
-    @bot.tree.command(name="falsebot")
-    @app_commands.describe(message = "Mensaje o \"Prompt\" a enviar al bot para que este responda")
-    async def falsebot(interaction: discord.Interaction, message: str):
-        response = gpt.response(prompt = message)
-        await interaction.response.send_message(response)
-    ## ERROR ##
-    @falsebot.error
-    async def falsebot_error(interaction: discord.Interaction, error):
-        await command_error_message(interaction = interaction, error = error)
