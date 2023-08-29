@@ -11,4 +11,3 @@ def get_discord_token():
 
 def get_openai_key():
 	return os.getenv('OPENAI_API_KEY')
-

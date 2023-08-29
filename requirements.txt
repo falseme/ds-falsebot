@@ -1,6 +1,5 @@
-discord.py
-easy_pil
-pillow
+nextcord
 openai
 python-dotenv
-requests
+easy_pil
+pillow
