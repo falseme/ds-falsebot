@@ -1,6 +1,3 @@
-from math import e
-from os import uname_result
-import re
 import nextcord
 from nextcord import File
 from nextcord.ext import commands
