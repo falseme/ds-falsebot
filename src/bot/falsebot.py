@@ -98,22 +98,22 @@ def run(token:str):
 	async def mod(interaction: nextcord.Interaction):
 		pass
 	
-	@mod.subcommand(description="Ban a user")
+	@mod.subcommand(description="Banea un usuario")
 	async def ban(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
 		print(f"[MOD] {member.display_name} > banned")
 		await mod_send_embed(interaction, member, "Usuario Baneado", f"El usuario {member.display_name}(@{member.mention}) ha sido baneado", f"Motivo: {reason}\nTiempo: {time} dia(s)", "ban.png")
 		
-	@mod.subcommand(description="Kick a user")
+	@mod.subcommand(description="Echa un usuario")
 	async def kick(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
 		print(f"[MOD] {member.display_name} > kicked")
 		await mod_send_embed(interaction, member, "Usuario Expulsado", f"El usuario {member.display_name}(@{member.mention}) ha sido expulsado", f"Motivo: {reason}", "kick.png")
 		
-	@mod.subcommand(description="Timeout a user")
+	@mod.subcommand(description="Mutea un usuario")
 	async def timeout(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
 		print(f"[MOD] {member.display_name} > timeout")
 		await mod_send_embed(interaction, member, "Usuario Muteado", f"El usuario {member.display_name}(@{member.mention}) ha sido muteado", f"Motivo: {reason}\nTiempo: {time} minuto(s)", "timeout.png")
 		
-	@mod.subcommand(description="Warn a user")
+	@mod.subcommand(description="Da una advertencia a un usuario")
 	async def warn(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
 		print(f"[MOD] {member.display_name} > warn")
 		await mod_send_embed(interaction, member, "Warn", f"El usuario {member.display_name}(@{member.mention}) ha recibido una advertencia", f"Motivo: {reason}", "warn.png")
@@ -125,7 +125,7 @@ def run(token:str):
 	async def user(interaction: nextcord.Interaction):
 		pass
 
-	@user.subcommand(description="Send a hug")
+	@user.subcommand(description="Envia un abrazo")
 	async def hug(interaction: nextcord.Interaction, member: nextcord.Member):
 		print(f"[USER] {interaction.user.display_name} > sent a hug to {member.display_name}")
 		author = interaction.user
@@ -141,11 +141,11 @@ def run(token:str):
 	async def nsfw(interaction: nextcord.Interaction):
 		pass
 	
-	@nsfw.subcommand(description="Get a random manga code")
+	@nsfw.subcommand(description="Genera un código random de un doujinshi")
 	async def random(interaction: nextcord.Interaction):
 		await interaction.send("RANDOM")
 		
-	@nsfw.subcommand(description="Get the week top")
+	@nsfw.subcommand(description="Ve la lista de los doujinshis mas leidos de esta semana")
 	async def top(interaction: nextcord.Interaction):
 		await interaction.send("TOP")
 		
@@ -155,11 +155,11 @@ def run(token:str):
 	async def ai(interaction: nextcord.Interaction):
 		pass
 	
-	@ai.subcommand(description="generate a response")
+	@ai.subcommand(description="Pregunta lo que sea")
 	async def gpt(interaction: nextcord.Interaction):
-		await interaction.send("GPT")
+		await interaction.send("ASKGPT")
 		
-	@ai.subcommand(description="Reply the message above")
+	@ai.subcommand(description="Responde al mensaje anterior")
 	async def replygpt(interaction: nextcord.Interaction):
 		await interaction.send("REPLYGPT")
 
