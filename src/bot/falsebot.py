@@ -1,5 +1,6 @@
 from math import e
 from os import uname_result
+import re
 import nextcord
 from nextcord import File
 from nextcord.ext import commands
@@ -9,6 +10,7 @@ from PIL import ImageFont
 
 from bot import intents
 from api import keys as falseapi
+from ai import gpt
 
 import random as py_random
 
@@ -141,7 +143,7 @@ def run(token:str):
 	async def nsfw(interaction: nextcord.Interaction):
 		pass
 	
-	@nsfw.subcommand(description="Genera un código random de un doujinshi")
+	@nsfw.subcommand(description="Genera un codigo random de un doujinshi")
 	async def random(interaction: nextcord.Interaction):
 		await interaction.send("RANDOM")
 		
@@ -156,11 +158,22 @@ def run(token:str):
 		pass
 	
 	@ai.subcommand(description="Pregunta lo que sea")
-	async def gpt(interaction: nextcord.Interaction):
-		await interaction.send("ASKGPT")
+	async def askgpt(interaction: nextcord.Interaction, message: str):
+		print(f"[AI] {interaction.user.display_name} > askgpt")
+		response = gpt.generate_response(prompt=message)
+		print(f"[AI] {message} > {response}")
+		await interaction.send(f"{interaction.user.mention}: {message}\n{response}")
+	@askgpt.error
+	async def askgpt_error(interaction: nextcord.Interaction, error):
+		await interaction.send(f"[!!] No es posible ejecutar este comando [!!] ({error.__cause__})", ephemeral= True)
 		
 	@ai.subcommand(description="Responde al mensaje anterior")
 	async def replygpt(interaction: nextcord.Interaction):
-		await interaction.send("REPLYGPT")
+		print(f"[AI] {interaction.user.display_name} > replygpt")
+		author = interaction.channel.last_message.author
+		msg = interaction.channel.last_message.content
+		response = gpt.generate_response(prompt=msg)
+		print(f"[AI] {msg} > {response}")
+		await interaction.send(f"{author.mention}: {msg}\n{response}")
 
 	bot.run(token)
