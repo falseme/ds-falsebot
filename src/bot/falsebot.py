@@ -1,5 +1,5 @@
 import nextcord
-from nextcord import File
+from nextcord import File, Permissions
 from nextcord.ext import commands
 
 from easy_pil import Editor, load_image_async
@@ -8,6 +8,7 @@ from PIL import ImageFont
 from bot import intents
 from api import keys as falseapi
 from ai import gpt
+from false_requests import nsfw_request
 
 import random as py_random
 
@@ -82,7 +83,7 @@ def run(token:str):
 
 	### TEST COMMANDS ###
 
-	@bot.slash_command(description="Test Commands")
+	@bot.slash_command(description="Test Commands", dm_permission=False)
 	async def test(interaction: nextcord.Interaction):
 		pass
 		
@@ -93,7 +94,7 @@ def run(token:str):
 	
 	### MODERATION COMMANDS ###        
 
-	@bot.slash_command(description="Moderation Commands")
+	@bot.slash_command(description="Moderation Commands", dm_permission=False, default_member_permissions=Permissions(ban_members=True))
 	async def mod(interaction: nextcord.Interaction):
 		pass
 	
@@ -120,7 +121,7 @@ def run(token:str):
 	
 	### USER INTERACTION COMMANDS ###
 
-	@bot.slash_command(description="Interact with other users")
+	@bot.slash_command(description="Interact with other users", dm_permission=False)
 	async def user(interaction: nextcord.Interaction):
 		pass
 
@@ -136,15 +137,17 @@ def run(token:str):
 
 	### NSFW COMMANDS ###
 
-	@bot.slash_command(description="nsfw")
+	@bot.slash_command(description="nsfw", dm_permission=False, nsfw=True)
 	async def nsfw(interaction: nextcord.Interaction):
 		pass
 	
-	@nsfw.subcommand(description="Genera un codigo random de un doujinshi")
+	@nsfw.subcommand(description="Recomienda un doujin aleatorio")
 	async def random(interaction: nextcord.Interaction):
-		await interaction.send("RANDOM")
+		print(f"[NSFW] {interaction.user.display_name} > random doujin")
+		print(nsfw_request.get_random())
+		await interaction.send("CMD")
 		
-	@nsfw.subcommand(description="Ve la lista de los doujinshis mas leidos de esta semana")
+	@nsfw.subcommand(description="Lista los doujins mas leidos de esta semana")
 	async def top(interaction: nextcord.Interaction):
 		await interaction.send("TOP")
 		

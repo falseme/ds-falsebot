@@ -9,6 +9,7 @@ openai = "*"
 python-dotenv = "*"
 easy-pil = "*"
 pillow = "*"
+hentai = "*"
 
 [dev-packages]
 
