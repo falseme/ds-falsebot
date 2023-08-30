@@ -1,6 +1,6 @@
 import openai
 
-def response(prompt):
+def generate_response(prompt):
 	response = openai.Completion.create(
 		model = "text-davinci-003",
 		prompt = prompt,

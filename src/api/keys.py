@@ -12,3 +12,5 @@ def get_discord_token():
 def get_openai_key():
 	return os.getenv('OPENAI_API_KEY')
 
+def get_modlog_channel():
+	return int(os.getenv('DS_CHANNEL_MOD_LOG_ID'))
