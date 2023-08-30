@@ -1,12 +1,16 @@
+from math import e
+from os import uname_result
 import nextcord
 from nextcord import File
 from nextcord.ext import commands
-from api import keys as falseapi
 
 from easy_pil import Editor, load_image_async
 from PIL import ImageFont
 
 from bot import intents
+from api import keys as falseapi
+
+import random as py_random
 
 class FalseBot(commands.Bot):
 	def __init__(self, *args, **kwargs):
@@ -66,6 +70,8 @@ def run(token:str):
 	
 	### UTIL ###
 
+	huglist = ["https://media.tenor.com/-rW7zgTPkkwAAAAi/hug.gif", "https://media.tenor.com/c3CBzmFnqHYAAAAi/hug.gif"]
+
 	async def mod_send_embed(embed_interaction: nextcord.Interaction, embed_member: nextcord.Member, embed_title: str, description: str, extra_description: str, iconfile: str):
 		msg = nextcord.Embed(colour = nextcord.Colour.dark_orange(), title = f"**{embed_title}**", type = "rich")
 		msg.add_field(name = description, value = extra_description)
@@ -73,7 +79,7 @@ def run(token:str):
 
 		await embed_member.send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg)
 		await embed_member.guild.get_channel(falseapi.get_modlog_channel()).send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg)
-		await embed_interaction.response.send_message(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg, delete_after = 4.0)
+		await embed_interaction.send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg, delete_after = 4.0)
 
 	### TEST COMMANDS ###
 
@@ -94,23 +100,23 @@ def run(token:str):
 	
 	@mod.subcommand(description="Ban a user")
 	async def ban(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
-		print(f"[MOD] {member.display_name} - banned")
-		await mod_send_embed(interaction, member, "Usuario Baneado", f"El usuario {member.display_name}(@{member.name}) ha sido baneado", f"Motivo: {reason}\nTiempo: {time} dia(s)", "ban.png")
+		print(f"[MOD] {member.display_name} > banned")
+		await mod_send_embed(interaction, member, "Usuario Baneado", f"El usuario {member.display_name}(@{member.mention}) ha sido baneado", f"Motivo: {reason}\nTiempo: {time} dia(s)", "ban.png")
 		
 	@mod.subcommand(description="Kick a user")
 	async def kick(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
-		print(f"[MOD] {member.display_name} - kicked")
-		await mod_send_embed(interaction, member, "Usuario Expulsado", f"El usuario {member.display_name}(@{member.name}) ha sido expulsado", f"Motivo: {reason}", "kick.png")
+		print(f"[MOD] {member.display_name} > kicked")
+		await mod_send_embed(interaction, member, "Usuario Expulsado", f"El usuario {member.display_name}(@{member.mention}) ha sido expulsado", f"Motivo: {reason}", "kick.png")
 		
 	@mod.subcommand(description="Timeout a user")
 	async def timeout(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
-		print(f"[MOD] {member.display_name} - timeout")
-		await mod_send_embed(interaction, member, "Usuario Muteado", f"El usuario {member.display_name}(@{member.name}) ha sido muteado", f"Motivo: {reason}\nTiempo: {time} minuto(s)", "timeout.png")
+		print(f"[MOD] {member.display_name} > timeout")
+		await mod_send_embed(interaction, member, "Usuario Muteado", f"El usuario {member.display_name}(@{member.mention}) ha sido muteado", f"Motivo: {reason}\nTiempo: {time} minuto(s)", "timeout.png")
 		
 	@mod.subcommand(description="Warn a user")
 	async def warn(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
-		print(f"[MOD] {member.display_name} - warn")
-		await mod_send_embed(interaction, member, "Warn", f"El usuario {member.display_name}(@{member.name}) ha recibido una advertencia", f"Motivo: {reason}", "warn.png")
+		print(f"[MOD] {member.display_name} > warn")
+		await mod_send_embed(interaction, member, "Warn", f"El usuario {member.display_name}(@{member.mention}) ha recibido una advertencia", f"Motivo: {reason}", "warn.png")
 		
 	
 	### USER INTERACTION COMMANDS ###
@@ -120,9 +126,14 @@ def run(token:str):
 		pass
 
 	@user.subcommand(description="Send a hug")
-	async def hug(interaction: nextcord.Interaction):
-		await interaction.send("HUG!")
-		
+	async def hug(interaction: nextcord.Interaction, member: nextcord.Member):
+		print(f"[USER] {interaction.user.display_name} > sent a hug to {member.display_name}")
+		author = interaction.user
+		msg = nextcord.Embed(colour = nextcord.Colour.blue(), description = f"{member.mention}! {author.mention} te ha enviado un abrazo!", type = "rich")
+		url = huglist[py_random.randint(0, len(huglist)-1)]
+
+		msg.set_image(url = url)
+		await interaction.send(embed = msg)
 
 	### NSFW COMMANDS ###
 
