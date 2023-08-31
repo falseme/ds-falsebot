@@ -72,14 +72,14 @@ def run(token:str):
 
 	huglist = ["https://media.tenor.com/-rW7zgTPkkwAAAAi/hug.gif", "https://media.tenor.com/c3CBzmFnqHYAAAAi/hug.gif"]
 
-	async def mod_send_embed(embed_interaction: nextcord.Interaction, embed_member: nextcord.Member, embed_title: str, description: str, extra_description: str, iconfile: str):
+	async def mod_send_embed(embed_interaction: nextcord.Interaction, embed_member: nextcord.Member, embed_title: str, description: str, extra_description: str, iconfile: str, notify: bool = True):
 		msg = nextcord.Embed(colour = nextcord.Colour.dark_orange(), title = f"**{embed_title}**", type = "rich")
 		msg.add_field(name = description, value = extra_description)
 		msg.set_thumbnail(url = f"attachment://{iconfile}")
 
 		await embed_member.send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg)
 		await embed_member.guild.get_channel(falseapi.get_modlog_channel()).send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg)
-		await embed_interaction.send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg, delete_after = 4.0)
+		await embed_interaction.send(file = File(f"res/icons/{iconfile}", filename= iconfile), embed = msg, delete_after = 4.0, ephemeral = not notify)
 
 	### TEST COMMANDS ###
 
@@ -101,22 +101,22 @@ def run(token:str):
 	@mod.subcommand(description="Banea un usuario")
 	async def ban(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
 		print(f"[MOD] {member.display_name} > banned")
-		await mod_send_embed(interaction, member, "Usuario Baneado", f"El usuario {member.display_name}(@{member.mention}) ha sido baneado", f"Motivo: {reason}\nTiempo: {time} dia(s)", "ban.png")
+		await mod_send_embed(interaction, member, "Usuario Baneado", f"El usuario **{member.display_name}** ha sido baneado", f"Motivo: {reason}\nTiempo: {time} dia(s)", "ban.png")
 		
 	@mod.subcommand(description="Echa un usuario")
 	async def kick(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
 		print(f"[MOD] {member.display_name} > kicked")
-		await mod_send_embed(interaction, member, "Usuario Expulsado", f"El usuario {member.display_name}(@{member.mention}) ha sido expulsado", f"Motivo: {reason}", "kick.png")
+		await mod_send_embed(interaction, member, "Usuario Expulsado", f"El usuario **{member.display_name}** ha sido expulsado", f"Motivo: {reason}", "kick.png")
 		
 	@mod.subcommand(description="Mutea un usuario")
 	async def timeout(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
 		print(f"[MOD] {member.display_name} > timeout")
-		await mod_send_embed(interaction, member, "Usuario Muteado", f"El usuario {member.display_name}(@{member.mention}) ha sido muteado", f"Motivo: {reason}\nTiempo: {time} minuto(s)", "timeout.png")
+		await mod_send_embed(interaction, member, "Usuario Muteado", f"El usuario **{member.display_name}** ha sido muteado", f"Motivo: {reason}\nTiempo: {time} minuto(s)", "timeout.png")
 		
 	@mod.subcommand(description="Da una advertencia a un usuario")
 	async def warn(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
 		print(f"[MOD] {member.display_name} > warn")
-		await mod_send_embed(interaction, member, "Warn", f"El usuario {member.display_name}(@{member.mention}) ha recibido una advertencia", f"Motivo: {reason}", "warn.png")
+		await mod_send_embed(interaction, member, "Warn", f"El usuario **{member.display_name}** ha recibido una advertencia", f"Motivo: {reason}", "warn.png", False)
 		
 	
 	### USER INTERACTION COMMANDS ###
@@ -163,9 +163,6 @@ def run(token:str):
 		response = gpt.generate_response(prompt=message)
 		print(f"[AI] {message} > {response}")
 		await interaction.send(f"{interaction.user.mention}: {message}\n{response}")
-	@askgpt.error
-	async def askgpt_error(interaction: nextcord.Interaction, error):
-		await interaction.send(f"[!!] No es posible ejecutar este comando [!!] ({error.__cause__})", ephemeral= True)
 		
 	@ai.subcommand(description="Responde al mensaje anterior")
 	async def replygpt(interaction: nextcord.Interaction):
@@ -175,5 +172,56 @@ def run(token:str):
 		response = gpt.generate_response(prompt=msg)
 		print(f"[AI] {msg} > {response}")
 		await interaction.send(f"{author.mention}: {msg}\n{response}")
+
+	### HELP COMMANDS ###
+
+	@bot.slash_command(description="ayuda")
+	async def falsehelp(interaction: nextcord.Interaction):
+		pass
+
+	@falsehelp.subcommand(description = "ayuda general", name = "all")
+	async def help_all(interaction: nextcord.Interaction):
+		print(f"[FALSE-BOT] {interaction.user.display_name} > /help")
+		
+		msg = nextcord.Embed(colour = nextcord.Colour.blue(), title = f"**Falsa tabla de una no real ayuda**", type = "rich")
+		#MOD#
+		role = interaction.user.top_role
+		if(role.name == falseapi.get_role_mod() or role.name == falseapi.get_role_admin()):
+			msg.add_field(inline = False, name = "Para Mods:", value =
+		 "- **/mod warn [usuario] [motivo]** - Advertencia por md\n" +
+		 "- **/mod timeout [usuario] [tiempo] [motivo]** - Timeout por 'x' minutos\n" +
+		 "- **/mod kick [usuario] [motivo]** - Un kick sin mas\n" +
+		 "- **/mod ban [usuario] [dias] [motivo]** - Ban por 'x' dias\n")
+
+		#USERS#
+		msg.add_field(inline = False, name = "Interacciones:", value =
+		 "- **/user hug [usuario]** - Envia un gif de un abrazo\n")
+
+		#AI#
+		msg.add_field(inline = False, name = "Inteligencia Artificial:", value =
+		 "- **/ai ask [mensaje]** - Recibe una respuesta generada con GPT\n" +
+		 "- **/ai reply** - Responde el mensaje de arriba\n")
+
+		#NSFW#
+		msg.add_field(inline = False, name = "NSFW:", value =
+		 "- **/falsehelp ['nsfw']**\n")
+		
+		file = File(f"res/icons/help.png", filename= "help.png")
+		msg.set_thumbnail(url = f"attachment://help.png")
+		
+		await interaction.send(file = file, embed = msg)
+
+	@falsehelp.subcommand(description = "ayuda nsfw", name = "nsfw")
+	async def help_nsfw(interaction: nextcord.Interaction):
+		msg = nextcord.Embed(colour = nextcord.Colour.blue(), title = f"**Falsa tabla de una no real ayuda**", type = "rich")
+		msg.add_field(inline = False, name = "NSFW:", value =
+		 "- **Solo disponible en canales 'nsfw'**\n" + 
+		 "- **/nsfw random ** - Muestra un doujin aleatorio\n" +
+		 "- **/nsfw top ** - Muestra el top semanal\n")
+		
+		file = File(f"res/icons/help.png", filename= "help.png")
+		msg.set_thumbnail(url = f"attachment://help.png")
+		
+		await interaction.send(file = file, embed = msg)
 
 	bot.run(token)
