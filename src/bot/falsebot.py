@@ -11,6 +11,7 @@ from ai import gpt
 from false_requests import nsfw_request
 
 import random as py_random
+from datetime import timedelta
 
 class FalseBot(commands.Bot):
 	def __init__(self, *args, **kwargs):
@@ -100,16 +101,22 @@ def run(token:str):
 	
 	@mod.subcommand(description="Banea un usuario")
 	async def ban(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
+		print(f"[MOD] {member.display_name} > ban")
+		await member.ban(reason = reason)
 		print(f"[MOD] {member.display_name} > banned")
 		await mod_send_embed(interaction, member, "Usuario Baneado", f"El usuario **{member.display_name}** ha sido baneado", f"Motivo: {reason}\nTiempo: {time} dia(s)", "ban.png")
 		
 	@mod.subcommand(description="Echa un usuario")
 	async def kick(interaction: nextcord.Interaction, member: nextcord.Member, reason: str):
+		print(f"[MOD] {member.display_name} > kick")
+		await member.kick(reason = reason)
 		print(f"[MOD] {member.display_name} > kicked")
 		await mod_send_embed(interaction, member, "Usuario Expulsado", f"El usuario **{member.display_name}** ha sido expulsado", f"Motivo: {reason}", "kick.png")
 		
 	@mod.subcommand(description="Mutea un usuario")
 	async def timeout(interaction: nextcord.Interaction, member: nextcord.Member, time: int, reason: str):
+		print(f"[MOD] {member.display_name} > try timeout")
+		await member.timeout(timedelta(minutes=time), reason = reason)
 		print(f"[MOD] {member.display_name} > timeout")
 		await mod_send_embed(interaction, member, "Usuario Muteado", f"El usuario **{member.display_name}** ha sido muteado", f"Motivo: {reason}\nTiempo: {time} minuto(s)", "timeout.png")
 		
