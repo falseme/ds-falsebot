@@ -23,7 +23,7 @@ class FalseBot(commands.Bot):
 		print(f"Logged in as {self.user} (ID: {self.user.id})")
 
 	async def on_member_join(self, member):
-		await self.welcome_member(self, member)
+		await self.welcome_member(member)
 		
 	### UTIL ###
 
@@ -210,18 +210,18 @@ def run(token:str):
 		 "- **/ai reply** - Responde el mensaje de arriba\n")
 
 		#NSFW#
-		msg.add_field(inline = False, name = "NSFW:", value =
+		msg.add_field(inline = False, name = "nsfw:", value =
 		 "- **/falsehelp ['nsfw']**\n")
 		
 		file = File(f"res/icons/help.png", filename= "help.png")
 		msg.set_thumbnail(url = f"attachment://help.png")
 		
-		await interaction.send(file = file, embed = msg)
+		await interaction.send(file = file, embed = msg, ephemeral = True)
 
 	@falsehelp.subcommand(description = "ayuda nsfw", name = "nsfw")
 	async def help_nsfw(interaction: nextcord.Interaction):
 		msg = nextcord.Embed(colour = nextcord.Colour.blue(), title = f"**Falsa tabla de una no real ayuda**", type = "rich")
-		msg.add_field(inline = False, name = "NSFW:", value =
+		msg.add_field(inline = False, name = "nsfw:", value =
 		 "- **Solo disponible en canales 'nsfw'**\n" + 
 		 "- **/nsfw random ** - Muestra un doujin aleatorio\n" +
 		 "- **/nsfw top ** - Muestra el top semanal\n")
@@ -229,6 +229,6 @@ def run(token:str):
 		file = File(f"res/icons/help.png", filename= "help.png")
 		msg.set_thumbnail(url = f"attachment://help.png")
 		
-		await interaction.send(file = file, embed = msg)
+		await interaction.send(file = file, embed = msg, ephemeral = True)
 
 	bot.run(token)
